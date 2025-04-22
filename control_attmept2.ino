@@ -11,12 +11,14 @@ https://www.youtube.com/watch?v=dTZnZZ4ZT7I
 
 When Serial Data is in CSV format. Collumn Order Actual ADC, Target ADC, Time
 */
+
 // Pins
 const int Extend_pin = 11;     // connect to motor control board IN2
 const int Retract_pin = 10;     // connect to motor control board IN1
 const int Position_pin = A0;   // Potentiometer Position
 const int Speed_pin = 9;       // PWM pin to set speed. Coneect to motor control baord pin ENA
-const int Trigger_Pin = 8      // Sends 5V signal at start of Sketch to signal Labview that the motor has started.
+const int Trigger_Pin = 8;      // Sends 5V signal at start of Sketch to signal Labview that the motor has started.
+
 // Location Variables
 float Desired_location;          // Distance of desired location
 int Desired_POT;               // Potentiometer Value at desired location
@@ -46,6 +48,8 @@ void setup() {
   pinMode(Extend_pin, OUTPUT);
   pinMode(Retract_pin, OUTPUT);
   pinMode(Speed_pin, OUTPUT);
+  pinMode(Trigger_Pin, OUTPUT);
+
   // Start with Actuator Motor Off In Both Directions
   digitalWrite(Extend_pin, LOW);    
   digitalWrite(Retract_pin, LOW);
@@ -58,10 +62,6 @@ void setup() {
   Home_location = constrain(Home_location, 0, 2);                                                   // only accept values from 0 to 2 inches
   Home_POT = map(Home_location*1000, 0*1000 , 2*1000, pot_Min_ADC, pot_Max_ADC);                    // map distance to POT values. 1000 multiplier converts floats into int for map()
   headingTo = Desired_POT; // start with an extension
-  
-  // Set PWM Speed When not using PID. COmment Out Wen using PID
- //Motor_PWM = 115;
-  
 
   // PID Control
   min_PWM = 50;            // Experimentally determined lowest PWM motor will move at
@@ -69,7 +69,11 @@ void setup() {
   ki = 0.01;
   kd = 0.01;
   last_time = 0;
+ 
+// Trigger Labview
+  digitalWrite(Trigger_Pin, HIGH);
 
+  // Start Serial Monitor
   Serial.begin(9600);
 }
 
