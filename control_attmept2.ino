@@ -43,6 +43,9 @@ double dt, last_time;
 double integral, previous, output = 0;
 double kp, ki, kd;
 
+// Speed Tracking
+double location = 0;
+double prevLocation = 0;
 
 void setup() {
   pinMode(Extend_pin, OUTPUT);
@@ -112,7 +115,26 @@ void loop() {
  
  // motor Function Inputs; (Position, Motor Speed)
  move_To_Position(pid_output);    // run motor function
- 
+
+// Speed Tracking
+double location = Actual_POT/1023*2*2.54; //Distance of potentiometer wiper, in cm.
+double cmSpeed = (location - prevLocation)/dt;
+prevLocation = location;
+
+bool printSpeed = false; // Set to true to display speed data
+if (printSpeed) {
+  Serial.print("\tSpeed (cm/s):");
+  Serial.println(cmSpeed);
+}
+
+// Estimating volumetric flow rate
+double syringeDiameter = 6.49; //550 cc syringe: 6.49 cm, 60 cc syringe: 2.84 cm
+double volFlowRate = cmSpeed*PI/4.0*sq(syringeDiameter);
+bool printFlowRate = false; // Set to true to display flow rate data
+if (printFlowRate) {
+  Serial.print("\tFlow Rate (cc/s):");
+  Serial.println(volFlowRate);
+{
  
 // Print Position
   Serial.print("Actual:");
