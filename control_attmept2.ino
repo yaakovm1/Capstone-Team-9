@@ -180,6 +180,7 @@ double pid(double error)
   integral += error * dt;                         // Ki*sum of errors
   double derivative = (error - previous) / dt;    // Kd*change in error
   previous = error;
+  // integral and derivative gains are constrained
   double output = (kp * proportional) + constrain((ki * integral),-25, 25) + constrain((kd * derivative), -25, 25);
   return output;
 }
