@@ -11,21 +11,22 @@ https://www.youtube.com/watch?v=dTZnZZ4ZT7I
 
 When Serial Data is in CSV format. Collumn Order Actual ADC, Target ADC, Time
 */
+// Pins
 const int Extend_pin = 11;     // connect to motor control board IN2
 const int Retract_pin = 10;     // connect to motor control board IN1
 const int Position_pin = A0;   // Potentiometer Position
 const int Speed_pin = 9;       // PWM pin to set speed. Coneect to motor control baord pin ENA
-
+const int Trigger_Pin = 8      // Sends 5V signal at start of Sketch to signal Labview that the motor has started.
+// Location Variables
 float Desired_location;          // Distance of desired location
 int Desired_POT;               // Potentiometer Value at desired location
 float Home_location;             // Distance of home location
 int Home_POT;                  // Potentiometer Value at home location
 int headingTo;                // Variable assigned the desired or home pot values
 
-
+// Motor and Potentiometer Specs
 int Motor_PWM;                 // Set Motor Speed
 int min_PWM;                   // Experimentally determined minimun PWM motr will move at
-int deadband = 20;             // Prevents Jittering at accepetably close final position. Smaller Value is more accurate but more jittery
 int pot_Max_ADC = 1023;        // Potentiometre ADC value at Full Extension
 int pot_Min_ADC = 0;           // Potentiometer ADC Value at Full Retraction
 
