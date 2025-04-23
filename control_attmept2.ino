@@ -74,8 +74,8 @@ void setup() {
   last_time = 0;
  
 // Trigger Labview
-  digitalWrite(Trigger_Pin, HIGH);
-
+digitalWrite(Trigger_Pin, HIGH);
+delay(100);                       // allow time for trigger to be read
   // Start Serial Monitor
   Serial.begin(9600);
 }
@@ -110,10 +110,11 @@ void loop() {
   // PID function to determine motor speed
   int Actual_POT = analogRead(Position_pin);
   double error = headingTo - Actual_POT;    // error = input-output
-  // Set Motor Speed based on PID. Constrained between min and max of PWM range
+ 
+// Set Motor Speed based on PID. Constrained between min and max of PWM range
   double pid_output = pid(error); //signed result
  
- // motor Function Inputs; (Position, Motor Speed)
+ // Motor Function
  move_To_Position(pid_output);    // run motor function
 
 // Speed Tracking
