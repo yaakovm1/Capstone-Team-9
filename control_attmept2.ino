@@ -77,7 +77,7 @@ void setup() {
 digitalWrite(Trigger_Pin, HIGH);
 delay(100);                       // allow time for trigger to be read
   // Start Serial Monitor
-  Serial.begin(9600);
+  Serial.begin(115200);
 }
 
 void loop() {
