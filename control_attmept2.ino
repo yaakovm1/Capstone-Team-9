@@ -131,7 +131,7 @@ bool printFlowRate = false; // Set to true to display flow rate data
 if (printFlowRate) {
   Serial.print("\tFlow Rate (cc/s):");
   Serial.println(volFlowRate);
-{
+}
  
 bool debugMode = true; // Set to false for CSV output
   if (debugMode) {
