@@ -5,10 +5,6 @@ https://www.youtube.com/watch?v=c7JtfogOsTQ&t=307s
 PID Controller Based on Ian Carey Youtube video
 https://www.youtube.com/watch?v=RZW1PsfgVEI
 
-
-Ziegler-Nichols Method For tuning PID Explained In This Short Video
-https://www.youtube.com/watch?v=dTZnZZ4ZT7I
-
 When Serial Data is in CSV format. Collumn Order Actual ADC, Target ADC, Time
 */
 
