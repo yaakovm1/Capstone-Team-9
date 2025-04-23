@@ -137,27 +137,23 @@ if (printFlowRate) {
   Serial.println(volFlowRate);
 {
  
-// Print Position
+bool debugMode = true; // Set to false for CSV output
+  if (debugMode) {
+  // Full human-readable debug output
   Serial.print("Actual:");
   Serial.print(Actual_POT);
-  Serial.print("\t");
-  Serial.print("Target:");
+  Serial.print("\tTarget:");
   Serial.print(headingTo);
-
- // Print PID Control 
- Serial.print("\t");
- Serial.print("Error: ");
- Serial.print(error);
- Serial.print("\tPWM Output: ");
- Serial.print(Motor_PWM);
- Serial.print("\tPressure Reading:  ");
- Serial.print(analogRead(A5));
- Serial.print("\tTime Elapsed:  ");
- Serial.println(millis());
- 
- 
-
- /*
+  Serial.print("\tError: ");
+  Serial.print(error);
+  Serial.print("\tPWM Output: ");
+  Serial.print(Motor_PWM);
+  Serial.print("\tPressure Reading: ");
+  Serial.print(analogRead(A5));
+  Serial.print("\tTime Elapsed: ");
+  Serial.println(millis());
+} else {
+  // CSV format for data logging
   Serial.print(Actual_POT);
   Serial.print(",");
   Serial.print(headingTo);
@@ -165,8 +161,7 @@ if (printFlowRate) {
   Serial.print(Motor_PWM);
   Serial.print(",");
   Serial.println(millis());
-  
-  */
+}
 
  //delay(10); // prevent jiggling 
 }
