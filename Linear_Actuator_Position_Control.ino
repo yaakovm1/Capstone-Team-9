@@ -102,6 +102,7 @@ void loop() {
   // PID function to determine motor speed
   double error = headingTo - analogRead(Position_pin);    // error = input-output
   // Set Motor Speed based on PID. Constrained between min and max of PWM range
+  // comment out when not using PID
   Motor_PWM = constrain(abs(pid(error)), min_PWM, 255);            // abs() of PID to avoid "negative errors" being constrained to min_PWM for when motor travels in reverse.
  
  // motor Function Inputs; (Position, Motor Speed)
