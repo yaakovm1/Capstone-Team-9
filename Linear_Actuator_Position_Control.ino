@@ -21,7 +21,7 @@ int Desired_POT;               // Potentiometer Value at desired location
 float Home_location;             // Distance of home location
 int Home_POT;                  // Potentiometer Value at home location
 int headingTo;                // Variable assigned the desired or home pot values
-
+int  Actual_POT;              // Read the current POT value
 
 int Motor_PWM;                 // Set Motor Speed
 int min_PWM;                   // Experimentally determined minimun PWM motr will move at
@@ -59,7 +59,7 @@ void setup() {
   headingTo = Desired_POT; // start with an extension
   
   // Set PWM Speed When not using PID. Comment Out Wen using PID
- Motor_PWM = 115;
+   Motor_PWM = 255;
   
 
   // PID Control
@@ -98,14 +98,16 @@ void loop() {
       nextTime = currentTime + timeExtend;
     }
   }
-  
+  Actual_POT = analogRead(Position_pin);  // Read the current POT value
   // PID function to determine motor speed
-  double error = headingTo - analogRead(Position_pin);    // error = input-output
-  // Set Motor Speed based on PID. Constrained between min and max of PWM range
-  // comment out when not using PID
+  double error = headingTo - Actual_POT;    // error = input-output
+  
+  /* Set Motor Speed based on PID. Constrained between min and max of PWM range
+  comment out when not using PID
   Motor_PWM = constrain(abs(pid(error)), min_PWM, 255);            // abs() of PID to avoid "negative errors" being constrained to min_PWM for when motor travels in reverse.
+ */
  
- // motor Function Inputs; (Position, Motor Speed)
+  // motor Function Inputs; (Position, Motor Speed)
  move_To_Position(headingTo, Motor_PWM);    // run motor function
  
  
@@ -130,8 +132,6 @@ void loop() {
 
 // Function For Moving To Desired Position
 void move_To_Position(int desired, int speed){          // plug in desired potentiometer value and speed to run function
-
-int  Actual_POT = analogRead(Position_pin);  // Read the current POT value
   
   if (abs(Actual_POT - desired) <= deadband) { // If within deadband do nothing
     digitalWrite(Extend_pin, LOW);
@@ -159,9 +159,9 @@ int  Actual_POT = analogRead(Position_pin);  // Read the current POT value
   Serial.print(desired);
   
   /*
-  Serial.print(Actual_POT);
+  Serial.print(Actual_POT*2/1023);
   Serial.print(",");
-  Serial.print(desired);
+  Serial.print(desired*2/1023);
   Serial.print(",");
   Serial.println(millis());
   */
