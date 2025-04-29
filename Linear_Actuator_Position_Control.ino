@@ -50,16 +50,16 @@ void setup() {
   digitalWrite(Retract_pin, LOW);
 
   // Set Desired and Home Locations and Potentiometer values
-  Desired_location = 1.10;                                                                          // inches
+  Desired_location = 1.10; // inches                                                                         // inches
   Desired_location = constrain(Desired_location, 0, 2);                                             // only accept values from 0 to 2 inches
   Desired_POT = map(Desired_location*1000, 0*1000 , 2*1000, pot_Min_ADC, pot_Max_ADC);              // map distance to POT values. 1000 multiplier converts floats into int for map()
-  Home_location = 0.75;                                                                              // inches
+  Home_location = 0.75;   //  inches                                                                         // inches
   Home_location = constrain(Home_location, 0, 2);                                                   // only accept values from 0 to 2 inches
   Home_POT = map(Home_location*1000, 0*1000 , 2*1000, pot_Min_ADC, pot_Max_ADC);                    // map distance to POT values. 1000 multiplier converts floats into int for map()
   headingTo = Desired_POT; // start with an extension
   
-  // Set PWM Speed When not using PID. COmment Out Wen using PID
- //Motor_PWM = 115;
+  // Set PWM Speed When not using PID. Comment Out Wen using PID
+ Motor_PWM = 115;
   
 
   // PID Control
