@@ -22,8 +22,8 @@ int pot_Min_ADC = 0;           // Potentiometer ADC Value at Full Retraction
 
 // Timing
 unsigned long nextTime;
-int timeExtend = 500;           // milliseconds
-int timeRetract = 500;          // milliseconds
+int timeExtend = 1000;           // milliseconds
+int timeRetract = 1000;          // milliseconds
 
 // Speed Tracking
 unsigned long lastTime = 0;
@@ -110,9 +110,13 @@ void loop() {
 
   correctionTick = move_To_Position(headingTo);
 
-  //Serial.print(extendingCorrection);
-  //Serial.print(","); 
-  //Serial.println(retractingCorrection);
+  if (targetCompensation) {
+  Serial.print(extendingCorrection);
+  Serial.print(","); 
+  Serial.print(retractingCorrection);
+  }
+  
+  Serial.print("\n");
 
   delay(50); // prevent jiggling 
 }
@@ -165,6 +169,8 @@ double cmLocation = Actual_POT/1023.0*2.0*2.54; //Distance of potentiometer wipe
  // double syringeDiameter = 6.49; //550 cc syringe: 6.49 cm, 60 cc syringe: 2.84 cm
  // double volFlowRate = cmSpeed*PI/4.0*sq(syringeDiameter);
 
+// Pressure conversion to kPa
+float kpaPressure = (Actual_PRE/1023.0*5.0 - 0.5)/4.0*206.843;
 
 
 
@@ -182,8 +188,7 @@ double cmLocation = Actual_POT/1023.0*2.0*2.54; //Distance of potentiometer wipe
   Serial.print(","); 
   Serial.print(cmLocation);
   Serial.print(","); 
-  Serial.println(Actual_PRE); // When upscaling to multiple actuators, make this a print statement and handle the newline outside the function
-
+  Serial.print(kpaPressure);
   return correction;
 }
 
