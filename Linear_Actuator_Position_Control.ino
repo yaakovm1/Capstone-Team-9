@@ -7,23 +7,32 @@ const int Position_pin = A0;   // Potentiometer Position
 const int Pressure_pin = A6;   // Pressure
 const int Speed_pin = 9;       // PWM pin to set speed. Coneect to motor control baord pin ENA
 
-float Desired_location;          // Distance of desired location
+//float Desired_location;          // Distance of desired location. (Initialized below)
 int Desired_POT;               // Potentiometer Value at desired location
-float Home_location;             // Distance of home location
+//float Home_location;             // Distance of home location. (Initialized below)
 int Home_POT;                  // Potentiometer Value at home location
 int headingTo;                // Variable assigned the desired or home pot values
 
 int Extend_PWM;                // Set Extend Speed
 int Retract_PWM;               // Set Retract Speed
-int deadband = 25;             // Prevents Jittering at accepetably close final position. Smaller Value is more accurate but more jittery
+int deadband = 30;             // Prevents Jittering at accepetably close final position. Smaller Value is more accurate but more jittery
 int pot_Max_ADC = 1023;        // Potentiometre ADC value at Full Extension
 int pot_Min_ADC = 0;           // Potentiometer ADC Value at Full Retraction
 
 
+// Testing parameters
+double strokeVolume = 40; //mL
+double cycleRate = 2; // Hz
+float Home_location = 0.5;  // in
+double syringeDiameter = 6.49; // cm
+float Desired_location = (4.0/PI/sq(syringeDiameter)*strokeVolume/2.54) + 0.5;
+
+
+
 // Timing
 unsigned long nextTime;
-int timeExtend = 1000;           // milliseconds
-int timeRetract = 1000;          // milliseconds
+int timeExtend = 500/cycleRate;           // milliseconds
+int timeRetract = 500/cycleRate;          // milliseconds
 
 // Speed Tracking
 unsigned long lastTime = 0;
@@ -44,6 +53,8 @@ int extendingCorrection = 0;
 int retractingCorrection = 0;
 int correctionTick = 0;
 
+
+
 void setup() {
   pinMode(Extend_pin, OUTPUT);
   pinMode(Retract_pin, OUTPUT);
@@ -51,11 +62,14 @@ void setup() {
   digitalWrite(Extend_pin, LOW);    // Start with Actuator Motor Off In Both Directions
   digitalWrite(Retract_pin, LOW);
 
+
+// Set testing parameters
+
+
   // Set Desired and Home Locations and Potentiometer values
-  Desired_location = 0.854;                                                                             // inches
+  //Desired_location = 0.854; %30 mL                                                                      // inches
   Desired_location = constrain(Desired_location, 0, 2);                                             // only accept values from 0 to 2 inches
-  Desired_POT = map(Desired_location*1000, 0*1000 , 2*1000, pot_Min_ADC, pot_Max_ADC);                             // map distance to POT values
-  Home_location = 0.5;                                                                              // inches
+  Desired_POT = map(Desired_location*1000, 0*1000 , 2*1000, pot_Min_ADC, pot_Max_ADC);                             // map distance to POT values                                                                           // inches
   Home_location = constrain(Home_location, 0, 2);                                                   // only accept values from 0 to 2 inches
   Home_POT = map(Home_location*1000, 0*1000 , 2*1000, pot_Min_ADC, pot_Max_ADC);                                   // map distance to POT values
   headingTo = Desired_POT; // start with an extension
@@ -108,6 +122,11 @@ void loop() {
     }
   }
 
+  // Begin by moving to home destination
+  while (millis()<1000) {
+    int temp = move_To_Position(Home_POT);
+  }
+
   correctionTick = move_To_Position(headingTo);
 
   if (targetCompensation) {
@@ -120,6 +139,8 @@ void loop() {
 
   delay(50); // prevent jiggling 
 }
+
+
 
 
 // Function For Moving To Desired Position
