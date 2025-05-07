@@ -47,14 +47,14 @@ x = tiledlayout(3,1);
 pos_input_ax = nexttile;
 pos_input = animatedline('Marker','o','MarkerSize',3,'MaximumNumPoints',NUMPOINTS+1);
 xlim([0,NUMPOINTS])
-ylim([0,3])
+ylim([0,2.5])
 ylabel("Position Input (inches)")
 
 % Create actual position tile
 pos_act_ax = nexttile;
 pos_act = animatedline('Marker','o','MarkerSize',3,'MaximumNumPoints',NUMPOINTS+1);
 xlim([0,NUMPOINTS])
-ylim([0,3])
+ylim([0,2.5])
 ylabel("Actual Position (inches)")
 
 % Create pressure tile
