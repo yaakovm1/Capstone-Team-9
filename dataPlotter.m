@@ -43,26 +43,26 @@ flush(sro)
 window = figure;
 x = tiledlayout(3,1);
 
-% Create pwm tile
+% Create input position tile
 pos_input_ax = nexttile;
 pos_input = animatedline('Marker','o','MarkerSize',3,'MaximumNumPoints',NUMPOINTS+1);
 xlim([0,NUMPOINTS])
 ylim([0,3])
 ylabel("Position Input (inches)")
 
-% Create thrust tile
+% Create actual position tile
 pos_act_ax = nexttile;
 pos_act = animatedline('Marker','o','MarkerSize',3,'MaximumNumPoints',NUMPOINTS+1);
 xlim([0,NUMPOINTS])
 ylim([0,3])
 ylabel("Actual Position")
 
-% Create moment tile
+% Create pressure tile
 pressure_ax = nexttile;
 pressure = animatedline('Marker','o','MarkerSize',3,'MaximumNumPoints',NUMPOINTS+1);
 xlim([0,NUMPOINTS])
 ylim([0, 100])
-ylabel("Moment (N-m)")
+ylabel("Pressure")
 
 % Start counter of the number of readings
 count = 0;
