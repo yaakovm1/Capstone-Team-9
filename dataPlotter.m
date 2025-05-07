@@ -89,9 +89,9 @@ while ishandle(window) % Run this loop until user closes window
     end
 
     % Add points to graph
-    addpoints(pos_input,count,data(1));
-    addpoints(pos_act,count,data(2));
-    addpoints(pressure,count,data(3));
+    addpoints(pos_input,count,data(2));
+    addpoints(pos_act,count,data(3));
+    addpoints(pressure,count,data(4));
 
     % Update limits
     xlim(pos_input_ax,[max(count-NUMPOINTS,0) max(count,NUMPOINTS)])
