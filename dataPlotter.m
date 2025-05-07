@@ -15,7 +15,6 @@ ind = strfind(res,dev_name);
 
 if (~isempty(ind))
     % If arduino found, save the name and print
-%     port_name = res(ind(1)+length(dev_name)+2:ind(1)+length(dev_name)+5);
 matchLine = extractBetween(res, ind(1), newline);
 tokens = regexp(matchLine{1}, 'COM\d+', 'match');
 port_name = tokens{1};
