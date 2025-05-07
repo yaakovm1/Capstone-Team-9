@@ -9,13 +9,17 @@ NUMPOINTS = 200;
 % Find the Arduino serial port
 % If this breaks, open device manager and find the name of the device
 % under ports, then replace dev_name with the name shown
-dev_name = 'Arduino Mega 2560';
+dev_name = 'Arduino Uno';
 [~,res]=system('wmic path Win32_SerialPort');
 ind = strfind(res,dev_name);
 
 if (~isempty(ind))
     % If arduino found, save the name and print
-    port_name = res(ind(1)+length(dev_name)+2:ind(1)+length(dev_name)+5);
+%     port_name = res(ind(1)+length(dev_name)+2:ind(1)+length(dev_name)+5);
+matchLine = extractBetween(res, ind(1), newline);
+tokens = regexp(matchLine{1}, 'COM\d+', 'match');
+port_name = tokens{1};
+
     fprintf('Arduino is on %s\n',port_name);
     % Attempt to open the port
     try
@@ -41,22 +45,22 @@ window = figure;
 x = tiledlayout(3,1);
 
 % Create pwm tile
-pwmax = nexttile;
-pwm = animatedline('Marker','o','MarkerSize',3,'MaximumNumPoints',NUMPOINTS+1);
+pos_input_ax = nexttile;
+pos_input = animatedline('Marker','o','MarkerSize',3,'MaximumNumPoints',NUMPOINTS+1);
 xlim([0,NUMPOINTS])
 ylim([0,100])
-ylabel("PWM (percent)")
+ylabel("Position Input (inches)")
 
 % Create thrust tile
-thrustax = nexttile;
-thrust = animatedline('Marker','o','MarkerSize',3,'MaximumNumPoints',NUMPOINTS+1);
+pos_act_ax = nexttile;
+pos_act = animatedline('Marker','o','MarkerSize',3,'MaximumNumPoints',NUMPOINTS+1);
 xlim([0,NUMPOINTS])
 ylim([0,20])
-ylabel("Thrust (N)")
+ylabel("Actual Position")
 
 % Create moment tile
-momentax = nexttile;
-moment = animatedline('Marker','o','MarkerSize',3,'MaximumNumPoints',NUMPOINTS+1);
+pressure_ax = nexttile;
+pressure = animatedline('Marker','o','MarkerSize',3,'MaximumNumPoints',NUMPOINTS+1);
 xlim([0,NUMPOINTS])
 ylim([-0.5,0.5])
 ylabel("Moment (N-m)")
@@ -66,8 +70,8 @@ count = 0;
 
 % CSV Data saving
 if saveFile == 1
-    filename = "ThrustStandData_"+string(datetime("now","Format","uuuuMMdd_HH_mm_ss"))+".csv"
-    writematrix(["Count" "Time" "PWM" "Thrust" "Moment"],filename)
+    filename = "VentriclePump_"+string(datetime("now","Format","uuuuMMdd_HH_mm_ss"))+".csv"
+    writematrix(["Count" "Time" "Input Position" "Actual Position" "Pressure"],filename)
 end
 
 start = tic;
@@ -86,14 +90,14 @@ while ishandle(window) % Run this loop until user closes window
     end
 
     % Add points to graph
-    addpoints(pwm,count,data(1));
-    addpoints(thrust,count,data(2));
-    addpoints(moment,count,data(3));
+    addpoints(pos_input,count,data(1));
+    addpoints(pos_act,count,data(2));
+    addpoints(pressure,count,data(3));
 
     % Update limits
-    xlim(pwmax,[max(count-NUMPOINTS,0) max(count,NUMPOINTS)])
-    xlim(thrustax,[max(count-NUMPOINTS,0) max(count,NUMPOINTS)])
-    xlim(momentax,[max(count-NUMPOINTS,0) max(count,NUMPOINTS)])
+    xlim(pos_input_ax,[max(count-NUMPOINTS,0) max(count,NUMPOINTS)])
+    xlim(pos_act_ax,[max(count-NUMPOINTS,0) max(count,NUMPOINTS)])
+    xlim(pressure_ax,[max(count-NUMPOINTS,0) max(count,NUMPOINTS)])
     
     % Draw the plot
     drawnow;
