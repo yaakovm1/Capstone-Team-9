@@ -47,21 +47,21 @@ x = tiledlayout(3,1);
 pos_input_ax = nexttile;
 pos_input = animatedline('Marker','o','MarkerSize',3,'MaximumNumPoints',NUMPOINTS+1);
 xlim([0,NUMPOINTS])
-ylim([0,100])
+ylim([0,3])
 ylabel("Position Input (inches)")
 
 % Create thrust tile
 pos_act_ax = nexttile;
 pos_act = animatedline('Marker','o','MarkerSize',3,'MaximumNumPoints',NUMPOINTS+1);
 xlim([0,NUMPOINTS])
-ylim([0,20])
+ylim([0,3])
 ylabel("Actual Position")
 
 % Create moment tile
 pressure_ax = nexttile;
 pressure = animatedline('Marker','o','MarkerSize',3,'MaximumNumPoints',NUMPOINTS+1);
 xlim([0,NUMPOINTS])
-ylim([-0.5,0.5])
+ylim([0, 100])
 ylabel("Moment (N-m)")
 
 % Start counter of the number of readings
