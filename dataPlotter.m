@@ -48,21 +48,21 @@ pos_input_ax = nexttile;
 pos_input = animatedline('Marker','o','MarkerSize',3,'MaximumNumPoints',NUMPOINTS+1);
 xlim([0,NUMPOINTS])
 ylim([0,2.5])
-ylabel("Position Input (inches)")
+ylabel("Position Input (cm)")
 
 % Create actual position tile
 pos_act_ax = nexttile;
 pos_act = animatedline('Marker','o','MarkerSize',3,'MaximumNumPoints',NUMPOINTS+1);
 xlim([0,NUMPOINTS])
 ylim([0,2.5])
-ylabel("Actual Position (inches)")
+ylabel("Actual Position (cm)")
 
 % Create pressure tile
 pressure_ax = nexttile;
 pressure = animatedline('Marker','o','MarkerSize',3,'MaximumNumPoints',NUMPOINTS+1);
 xlim([0,NUMPOINTS])
 ylim([0, 100])
-ylabel("Pressure")
+ylabel("Pressure (kPa)")
 
 % Start counter of the number of readings
 count = 0;
