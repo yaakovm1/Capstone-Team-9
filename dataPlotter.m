@@ -55,7 +55,7 @@ pos_act_ax = nexttile;
 pos_act = animatedline('Marker','o','MarkerSize',3,'MaximumNumPoints',NUMPOINTS+1);
 xlim([0,NUMPOINTS])
 ylim([0,3])
-ylabel("Actual Position")
+ylabel("Actual Position (inches)")
 
 % Create pressure tile
 pressure_ax = nexttile;
@@ -70,7 +70,7 @@ count = 0;
 % CSV Data saving
 if saveFile == 1
     filename = "VentriclePump_"+string(datetime("now","Format","uuuuMMdd_HH_mm_ss"))+".csv"
-    writematrix(["Count" "Time" "Input Position" "Actual Position" "Pressure"],filename)
+    writematrix(["Count" "Time" "" "Input Position" "Actual Position" "Pressure"],filename)
 end
 
 start = tic;
@@ -102,10 +102,3 @@ while ishandle(window) % Run this loop until user closes window
     drawnow;
 end
 
-
-%% To do
-%{
-- File output, I think CSV
-- 
-
-%}
