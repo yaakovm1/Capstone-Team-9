@@ -25,7 +25,7 @@ count = 0;
 % CSV Data saving
 if saveFile == 1
     filename = "VentriclePump_"+string(datetime("now","Format","uuuuMMdd_HH_mm_ss"))+".csv"
-    writematrix(["Count" "Time" " " "Input Position" "Actual Position" "Pressure"],filename)
+    writematrix(["Count" "Time" "Arduino Time" "Input Position" "Actual Position" "Pressure"],filename)
 end
 
 start = tic;
