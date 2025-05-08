@@ -8,6 +8,8 @@ Created: 4/30/25
 clear;clc; close all;
 
 rawData = readtable("550cc_1_Hz_50-50_Syringe_Air_Test_2.csv");
+% make sure file has the correct collumns. If not reorganize columns before continuing.
+% you will need to remove the clear;clc; close all; line so changes are rewritten
 headerNames = ["runTime", "cmDesired", "cmActual", "pressure"];
 %                 (ms)       (cm)          (cm)        (-)
 
