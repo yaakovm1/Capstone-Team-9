@@ -17,7 +17,7 @@ pressure_ax = nexttile;
 pressure = animatedline('Marker','o','MarkerSize',3,'MaximumNumPoints',NUMPOINTS+1);
 xlim([0,NUMPOINTS])
 ylim([0, 150])
-ylabel("Pressure (kPa")
+ylabel("Pressure (kPa)")
 
 % Start counter of the number of readings
 count = 0;
