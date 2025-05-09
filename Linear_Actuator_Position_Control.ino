@@ -21,8 +21,9 @@ int pot_Min_ADC = 0;           // Potentiometer ADC Value at Full Retraction
 
 
 // Testing parameters
-double strokeVolume = 40; //mL
-double cycleRate = 2; // Hz
+bool running = true;
+float strokeVolume = 30; //mL
+float cycleRate = 0.5; // Hz
 float Home_location = 0.5;  // in
 double syringeDiameter = 6.49; // cm
 float Desired_location = (4.0/PI/sq(syringeDiameter)*strokeVolume/2.54) + 0.5;
@@ -53,6 +54,9 @@ int extendingCorrection = 0;
 int retractingCorrection = 0;
 int correctionTick = 0;
 
+// Serial Monitor Handling
+char incomingChar;
+
 
 
 void setup() {
@@ -82,6 +86,21 @@ void setup() {
 }
 
 void loop() {
+
+  // While serial data is available, read and parse it.
+  if (Serial.available() > 0) {
+    ReceiveInstructions();
+  }
+
+  // Change actuation parameters based on serial input
+  Desired_location = (4.0/PI/sq(syringeDiameter)*strokeVolume/2.54) + 0.5;
+  Desired_location = constrain(Desired_location, 0, 2);                                             // only accept values from 0 to 2 inches
+  Desired_POT = map(Desired_location*1000, 0*1000 , 2*1000, pot_Min_ADC, pot_Max_ADC);                // map distance to POT values
+  
+  timeExtend = 500/cycleRate;           // milliseconds
+  timeRetract = 500/cycleRate;          // milliseconds
+  
+
 
   unsigned long currentTime = millis();
   // timing determines location actuator moves to
@@ -127,7 +146,9 @@ void loop() {
     int temp = move_To_Position(Home_POT);
   }
 
+if (running) {
   correctionTick = move_To_Position(headingTo);
+}
 
   if (targetCompensation) {
   Serial.print(extendingCorrection);
@@ -135,7 +156,7 @@ void loop() {
   Serial.print(retractingCorrection);
   }
   
-  Serial.print("\n");
+  if (running) {Serial.println();}
 
   delay(50); // prevent jiggling 
 }
@@ -202,7 +223,7 @@ float kpaPressure = (Actual_PRE/1023.0*5.0 - 0.5)/4.0*206.843;
 - Current Position
 - Pressure Reading
 */
-
+ if (running) {
   Serial.print(millis());
   Serial.print(","); 
   Serial.print(cmDesired); 
@@ -210,9 +231,82 @@ float kpaPressure = (Actual_PRE/1023.0*5.0 - 0.5)/4.0*206.843;
   Serial.print(cmLocation);
   Serial.print(","); 
   Serial.print(kpaPressure);
+ }
   return correction;
 }
 
+// ReceiveInstructions updates the system's parameters based on input from the serial monitor
+// 'r': run
+// 's': stop
+// 'v': Following integer is the new stroke volume, in mL
+// 'f': Following float is the new cycle frequency, in Hz
+// e.g. r v30 f1
+void ReceiveInstructions() {
+  int blockIndex = 0;
+  int lineIndex = 0;
+  bool changeVolume = false;
+  bool changeFrequency = false;
+  int i;
+  char incomingBlock[8] = {'\0','\0','\0','\0','\0','\0','\0','\0'};
+  char incomingLine[20];
+  int newIndex = 0;
+  char temp;
+ 
+  while(Serial.available() > 0) {
+    incomingChar = Serial.read();
+    delay(10);
+    incomingLine[lineIndex] = incomingChar;
+    lineIndex++;
+    if (incomingChar == ' ') { // if ' ': check update bools, update parameter using block if true and then set to false, clear block, add to line
+      if (changeVolume && blockIndex != 0) {
+        strokeVolume = atof(incomingBlock);
+        changeVolume = false;
+      } else if (changeFrequency && blockIndex != 0) {
+        cycleRate = atof(incomingBlock);
+        changeFrequency = false;
+      }
+      for (i = 0; i<blockIndex; i++) {
+        incomingBlock[i]='\0';
+      }
+      blockIndex = 0;
+    } else if (incomingChar == '\n'){     // else if '\n': clear block, add to line, break.
+      if (changeVolume && blockIndex != 0) {
+        strokeVolume = atof(incomingBlock);
+        changeVolume = false;
+      } else if (changeFrequency && blockIndex != 0) {
+        cycleRate = atof(incomingBlock);
+        changeFrequency = false;
+      }
+      for (i = 0; i<blockIndex; i++) {
+        incomingBlock[i]='0';
+      }
+      blockIndex = 0;
+    } else if (incomingChar == 'r'){     // else if 'r': run, add to line
+      running = true;
+    } else if (incomingChar == 's'){     // else if 's': stop, add to line
+      running = false;
+    } else if (incomingChar == 'v'){     // else if 'v': set changeVolume to true, clear block, add to line
+      changeVolume = true;
+    } else if (incomingChar == 'f'){     // else if 'f': set changeFrequency to true, add to line
+      changeFrequency = true;
+    } else {        // else add to block
+      incomingBlock[blockIndex] = incomingChar;
+      blockIndex++;
+    }
+    //Serial.println(incomingChar);
+    //Serial.println(incomingBlock);
+  }
+  
+  //Serial.print(incomingLine);
+  Serial.print("Running: ");
+  Serial.println(running);
+  Serial.print("Stroke Volume: ");
+  Serial.println(strokeVolume);
+  Serial.print("Cycle Rate: ");
+  Serial.println(cycleRate);
+  Serial.println();
+  
+}
 
 
 
