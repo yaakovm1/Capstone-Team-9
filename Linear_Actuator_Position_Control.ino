@@ -21,7 +21,7 @@ int pot_Min_ADC = 0;           // Potentiometer ADC Value at Full Retraction
 
 
 // Testing parameters
-bool running = true;
+bool running = false;
 float strokeVolume = 30; //mL
 float cycleRate = 0.5; // Hz
 float Home_location = 0.5;  // in
@@ -297,6 +297,7 @@ void ReceiveInstructions() {
     //Serial.println(incomingBlock);
   }
   
+  /*
   //Serial.print(incomingLine);
   Serial.print("Running: ");
   Serial.println(running);
@@ -305,6 +306,7 @@ void ReceiveInstructions() {
   Serial.print("Cycle Rate: ");
   Serial.println(cycleRate);
   Serial.println();
+  */
   
 }
 
